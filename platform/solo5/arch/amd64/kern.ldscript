@@ -1,10 +1,14 @@
-OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
-OUTPUT_ARCH(i386:x86-64)
+OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64") 
+OUTPUT_ARCH(i386:x86-64) 
 ENTRY(_start)
+
+sv_start = 0xFFFFC00000000000;
+sv_last  = 0xFFFFC07FFFFFFFFF;
 
 SECTIONS
 {
-	. = 0x100000;
+	/* . = 0x100000; */
+	. = sv_start ;  
 	_begin = . ;
 
 	.bootstrap :
@@ -27,15 +31,28 @@ SECTIONS
 	}
 	_etext = . ;
 
+  . = ALIGN(0x1000);
 	.rodata :
-	AT (LOADADDR(.text) + (ADDR(.rodata) - ADDR(.text)))
+	/* AT (LOADADDR(.text) + (ADDR(.rodata) - ADDR(.text))) */
+	AT (ADDR(.rodata))
 	{
 		*(.rodata)
 		*(.rodata.*)
 	}
 
-        _erodata = .;
+    _erodata = .;
 
+        .eh_frame_hdr ALIGN(4K) : {
+        *(.eh_frame_hdr)
+        }
+
+        .eh_frame ALIGN(4) : ONLY_IF_RO {
+        __eh_frame_start = .;
+        *(.eh_frame)
+        QUAD(0);
+        }
+
+. = ALIGN(0x1000);
 	.initfini :
 	AT (LOADADDR(.text) + (ADDR(.initfini) - ADDR(.text)))
 	{
@@ -60,18 +77,31 @@ SECTIONS
 		*(.data)
 		*(.data.*)
 	}
+	. = ALIGN(0x1000);
 	.tdata : {
 		_tdata_start = . ;
 		*(.tdata)
 		_tdata_end = . ;
 	}
 	_edata = . ;
+	. = ALIGN(0x1000);
 	.tbss : {
 		_tbss_start = . ;
 		*(.tbss)
 		_tbss_end = . ;
 	}
 
+.got BLOCK(4K) : ALIGN(4K)
+{
+*(.got)
+}
+
+  .got.plt BLOCK(4k) : ALIGN(4K)
+  {
+*(.got.plt.*)
+}
+
+. = ALIGN(0x1000);
 	__bss_start = . ;
 	.bss :
 	AT (LOADADDR(.text) + (ADDR(.bss) - ADDR(.text)))
@@ -80,6 +110,7 @@ SECTIONS
 		*(.bss.*)
 		*(COMMON)
 	}
+	. = ALIGN(0x1000);
 	.lbss :
 	AT (LOADADDR(.text) + (ADDR(.lbss) - ADDR(.text)))
 	{
