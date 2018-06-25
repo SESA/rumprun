@@ -91,50 +91,6 @@ SECTIONS
 		_tbss_end = . ;
 	}
 
-link_set_sysctl_funcs : ALIGN(4K)
-{
-*(link_set_sysctl_funcs);
-}
-
-link_set_bufq_strats : ALIGN(4K)
-{
-*(link_set_bufq_strats);
-}
-
-link_set_modules   : ALIGN(4K)
-{
-__start_link_set_modules = .;
-*(link_set_modules);
-__stop_link_set_modules = .;
-}
-
-link_set_rump_components  : ALIGN(4K)
-{
-__start_link_set_rump_components = .;
-*(link_set_rump_components);
-__stop_link_set_rump_components = .;
-}
-
-link_set_domains   : ALIGN(4K)
-{
-*(link_set_domains);
-}
-
-link_set_evcnts    : ALIGN(4K)
-{
-*(link_set_evcnts);
-}
-
-link_set_dkwedge_methods  : ALIGN(4K)
-{
-*(link_set_dkwedge_methods);
-}
-
-link_set_prop_linkpools  : ALIGN(4K)
-{
-*(link_set_prop_linkpools);
-}
-
 .got BLOCK(4K) : ALIGN(4K)
 {
 *(.got)
