@@ -56,7 +56,7 @@ ENTRY(bmk_cpu_sched_switch)
 	pushq %r15
 	movq %rsp, (%rdi)               /* save ESP */
 	movq (%rsi), %rsp               /* restore ESP */
-	leaq 0x18(%eip), %rax           /* save EIP HACK */
+	leaq 0x8(%rip), %rax           /* save EIP HACK */
 	movq %rax, 8(%rdi)              /* save EIP HACK */
 	pushq 8(%rsi)                   /* restore EIP */
 	ret
