@@ -27,6 +27,9 @@ helloer:
 distclean: clean
 	make -C ../ clean
 
+quickClean:
+	-rm $(RUMP_SOLO5_X86_64) -rf
+
 clean:
 	-rm helloer-rumprun helloer.ebbrt
 
