@@ -40,6 +40,8 @@
 
 #include <rumprun-base/rumprun.h>
 
+extern void solo5_exit(int);
+
 void __dead
 _exit(int eval)
 {
@@ -56,6 +58,7 @@ _exit(int eval)
 		printf("\n=== _exit(%d) called ===\n", eval);
 	}
 
+  solo5_exit(0);
 	pthread_exit((void *)(uintptr_t)eval);
 }
 
